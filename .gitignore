@@ -1,0 +1,11 @@
+.env
+.idea/
+*.iml
+*.log
+.DS_Store
+env/
+.conda/
+*.conda
+*.env
+__pycache__/
+*.py[cod]
