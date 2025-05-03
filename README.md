@@ -9,7 +9,6 @@
   - [Before You Start Editing](#before-you-start-editing)
   - [Pushing Your Code to GitHub](#pushing-your-code)
   - [Summary](#summary)
-  - [Important: Do Not Push to Main!](#important-do-not-push-to-main)
 - [Running the Project](#to-run-open-terminal)
   - [Backend](#start-backend-server)
   - [Frontend](#start-frontend)
@@ -52,23 +51,42 @@ I suggest adding the conda env into this project by:
 
 # Using Git
 ## Before you start editing:
+### Get the most updated code by using this command
+```
+get checkout main
+git pull origin main
+```
+### Then create and switch to your personal branch of code
+
 **REPLACE `branchname` WITH YOUR NAME**  
 (my name is Serena, so my command would look like git checkout -b serena-branch)
 ```
 git checkout -b branchname
 ```
+After creating the branch, in the future you don't need the -b, you can just say
+```
+git checkout branchname
+```
 A branch in Git is like a safe workspace where you can make changes to your code without affecting the main version. 
-Once you're happy with your changes, you can merge the branch back into the main project. This is especially useful 
-when working in teams, so each person can work on their own branch without interfering with others.
+This is especially useful when working in teams, so each person can work on their own branch without interfering with others.
+
+***DO NOT EDIT ANY CODE WHEN YOU ARE IN THE MAIN BRANCH, only edit it on your personal branch***
+
 
 ## Pushing Your Code
-#### If you think your code is ready & you want to push to the remote repository on Github
+#### If you think your code is ready & you want to push to the remote repository on Github, follow the follwing steps
+***AGAIN, MAKE SURE YOU ARE ON YOUR PERSONAL BRANCH***
+
+- you can check what branch you are on with:
+```
+git branch
+```
 - To check what files you edited:
 ```
 git status
 ```
 - To add a single changed file (replace filename with the file you want to stage):
-If I changed the file backend/main.py, I would write "git add backend/main.py"
+  - If I changed the file backend/main.py, I would write "git add backend/main.py"
 ```
 git add filename
 ```
@@ -77,19 +95,21 @@ git add filename
 git add .
 ```
 - To commit your changes:
-If I added RAG functionality, the command might look like "git commit -m "added rag" "
+  - If I added RAG functionality, the command might look like "git commit -m "added rag" "
 ```
 git commit -m "explanation of what was changed"
 ```
-- Lastly, push to the remote repository (replace branchname with your name!!)
+- Then, pull again from the remote repository (as someone else might have pushed new code)
+```
+git merge main
+```
+- Lastly, push to the remote repository (replace branchname with your branchname!!)
 ```
 git push -u origin branchname
 ```
 ### SUMMARY:
 the pipeline to push to Github is:
-check status of files --> add the changed files --> commit them w/ a msg description --> push
-(I also think it's very strange that you need to add and commit, but that's just the rules :/)
-
+check status of files --> add the changed files --> commit them w/ a msg description --> pull again --> push
 ### IMPORTANT!!! DO NOT PUSH TO MAIN!!!
 
 # To run (open terminal)
