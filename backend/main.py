@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from create_embedding import get_embedding
+from create_embeddings import get_embedding
 import os
 
 PINECONE_INDEX = os.getenv("PINECONE_INDEX")
