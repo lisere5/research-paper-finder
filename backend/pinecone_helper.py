@@ -38,16 +38,6 @@ def upsert_document_vectors(name: str, vectors: list):
     index.upsert(vectors)
 
 
-def query_vectors(name: str, vector: list[float], top_k=1, metadata_filter=None, include_metadata=True):
-    index = pc_get_index(name)
-    return index.query(
-        vector=vector,
-        top_k=top_k,
-        filter=metadata_filter,
-        include_metadata=include_metadata
-    )
-
-
 def delete_document_by_ids(name: str, uids: list):
     index = pc_get_index(name)
     index.delete(ids=uids)
@@ -56,3 +46,13 @@ def delete_document_by_ids(name: str, uids: list):
 def delete_all_documents(name: str):
     index = pc_get_index(name)
     index.delete(delete_all=True)
+
+
+def query_vectors(name: str, vector: list[float], top_k=5, metadata_filter=None, include_metadata=True):
+    index = pc_get_index(name)
+    return index.query(
+        vector=vector,
+        top_k=top_k,
+        filter=metadata_filter,
+        include_metadata=include_metadata
+    )
