@@ -3,9 +3,23 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from create_embeddings import get_embedding
+from pinecone_helper import query_vectors
+from typing import Optional
 import os
 
+load_dotenv()
 PINECONE_INDEX = os.getenv("PINECONE_INDEX")
+
+app = FastAPI()
+
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/search")
 def search(
@@ -18,13 +32,12 @@ def search(
 ):
     # Step 1: Embed the user query using your embedding model
     try:
-        embedding = get_query_embedding(query)
+        embedding = get_embedding(query)
     except Exception as e:
         return {"error": f"Failed to generate embedding: {e}"}
 
     # Step 2: Construct metadata filter
     metadata_filter = {}
-
     if author:
         metadata_filter["authors"] = {"$in": [author]}
 
@@ -62,19 +75,6 @@ def search(
         })
 
     return papers
-
-load_dotenv()
-
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # or specify frontend URL
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 
 @app.get("/ping")
 def ping():
