@@ -115,7 +115,17 @@ async def main():
         # generate vectors to be inserted
         for entry, embedding in zip(entries, embeddings):
             doc_uid = entry['link'].encode("utf-8").hex()
-            vector = {"id": doc_uid, "values": embedding, "metadata": entry}
+            vector = {
+                "id": doc_uid,
+                "values": embedding,
+                "metadata": {
+                    "title": entry["title"],
+                    "abstract": entry["abstract"],
+                    "authors": entry["authors"],
+                    "published_year": entry["published_year"],
+                    "journal": entry.get("journal", "unknown")
+                }
+            }
             vectors.append(vector)
 
         if len(vectors) == 100:
