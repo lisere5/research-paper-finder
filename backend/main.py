@@ -101,8 +101,8 @@ def details(paper_id: str):
 
     # get similar docs:
     embedding = paper.values
-    relevant_docs = query_vectors(PINECONE_INDEX, embedding)
-    matches = relevant_docs["matches"]
+    relevant_docs = query_vectors(PINECONE_INDEX, embedding, 6)
+    matches = relevant_docs.get("matches", [])[1:]
     formatted_docs = [
             {
                 "id": m.get("id"),
