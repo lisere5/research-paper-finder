@@ -1,6 +1,6 @@
 import os
 from pinecone import Pinecone
-from pinecone_helper import pc_create_index
+from backend.pinecone_helper import pc_create_index
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -8,6 +8,7 @@ PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_INDEX = os.getenv("PINECONE_INDEX")
 
 # pinecone setup
+
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
 name = PINECONE_INDEX

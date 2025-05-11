@@ -1,5 +1,5 @@
-from openai_helper import get_batch_embeddings
-from pinecone_helper import upsert_document_vectors, delete_all_documents, upsert_document_vectors_by_batches
+from backend.openai_helper import get_batch_embeddings
+from backend.pinecone_helper import upsert_document_vectors, delete_all_documents, upsert_document_vectors_by_batches
 import feedparser
 import asyncio
 import os

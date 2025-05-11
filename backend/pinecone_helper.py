@@ -2,7 +2,7 @@ import os
 from pinecone import Pinecone, ServerlessSpec
 from dotenv import load_dotenv
 from models import SearchQuery
-from datetime import datetime
+from similarity_helper import get_relevant_authors, get_relevant_journals
 
 load_dotenv()
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
@@ -81,18 +81,19 @@ def build_metadata_filter(query_params: SearchQuery):
 
     # Author filter: supports OR across authors (e.g., match any author)
     if query_params.authors:
-        authors = [a.strip() for a in query_params.authors.split(",") if a.strip()]
+        user_entered_authors = [a.strip() for a in query_params.authors.split(",") if a.strip()]
+        authors = get_relevant_authors(user_entered_authors, "authors.csv")
         if authors:
             metadata_filter["authors"] = {"$in": authors}
 
     # Journal filter: supports OR across journals
     if query_params.journal:
-        journals = [j.strip().lower() for j in query_params.journal.split(",") if j.strip()]
+        user_entered_journals = [j.strip().lower() for j in query_params.journal.split(",") if j.strip()]
+        journals = get_relevant_journals(user_entered_journals, "journals.csv")
         if journals:
             metadata_filter["journal"] = {"$in": journals}
 
-    # Date filters (stored as string, so lexicographic comparison must match ISO 8601 format)
-
+    # Data filters
     date_conditions = []
 
     if query_params.start_year is not None:

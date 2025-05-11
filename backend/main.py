@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from pinecone_helper import query_vectors, build_metadata_filter, get_document_by_id
-from openai_helper import query_llm, get_embedding
+from openai_helper import query_llm_in_chunks, get_embedding
 import os
 from datetime import datetime
 from fastapi import Depends
@@ -23,11 +23,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.get("/ping")
-def ping():
-    return {"message": "Pong from FastAPI!"}
 
 
 def format_date(iso_date: str):
@@ -102,13 +97,7 @@ def details(paper_id: str):
         paper_text += page.get_text()
 
     # get summary
-    prompt = f"""
-    Summarize the following research paper. 
-    Be high level, use no more than 8 sentences. 
-    The summary must be in paragraph form. 
-    
-    Research paper: {paper_text}"""
-    llm_summary = query_llm(prompt)
+    llm_summary = query_llm_in_chunks(paper_text)
 
     # get similar docs:
     embedding = paper.values
