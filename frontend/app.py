@@ -66,6 +66,9 @@ if paper_id:
             f"""
             <div style="border:1px solid #ccc; border-radius:10px; padding:20px; background-color:#f0f0f0;">
                 <h4>🧠 LLM Summary</h4>
+                <p style="font-size:12px; color:#555; font-style:italic;">
+                The summary below is auto-generated. Please verify details with the original source.
+                </p>
                 <p>{paper['llm_summary']}</p>
             </div>
             """,
