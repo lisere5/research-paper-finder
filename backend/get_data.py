@@ -1,9 +1,10 @@
-from create_embeddings import get_batch_embeddings
-from pinecone_helper import upsert_document_vectors
+from openai_helper import get_batch_embeddings
+from pinecone_helper import upsert_document_vectors, delete_all_documents, upsert_document_vectors_by_batches
 import feedparser
 import asyncio
 import os
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 
@@ -59,7 +60,7 @@ arxiv_categories = [
 papers = set()
 
 
-def fetch_arxiv(cat, max_per_cat=20):
+def fetch_arxiv(cat, max_per_cat=50):
     res = []
 
     print(f"Category: {cat}")
@@ -79,6 +80,8 @@ def fetch_arxiv(cat, max_per_cat=20):
             title = entry.get('title', None)
             abstract = entry.get('summary', None)
             authors = [a.get("name") for a in entry.get("authors", [])]
+            journal_ref = entry.get("arxiv_journal_ref", "N/A")
+            categories = [tag['term'] for tag in entry.get("tags", [])]
 
             entry_dict = {
                 'link': link,
@@ -89,6 +92,8 @@ def fetch_arxiv(cat, max_per_cat=20):
                 'title': title,
                 'abstract': abstract,
                 'authors': authors,
+                'journal': journal_ref,
+                'categories': categories,
                 'text': f"Title: {title}, Abstract: {abstract}"
             }
 
@@ -97,13 +102,17 @@ def fetch_arxiv(cat, max_per_cat=20):
     return res
 
 
-# entries = fetch_arxiv(['cs.ai'], 1) # TESTING PURPOSES
+# entries = fetch_arxiv('cs.ai', 1) # TESTING PURPOSES
+# print(json.dumps(entries, indent=2))
+
+# delete_all_documents(PINECONE_INDEX)
+
 
 async def main():
     vectors = []
 
     for i in range(0, len(arxiv_categories), 5):
-        batch_categories = arxiv_categories[i:i+5]
+        batch_categories = arxiv_categories[i:i + 5]
         entries = []
         for cat in batch_categories:
             entries.extend(fetch_arxiv(cat))
@@ -118,18 +127,11 @@ async def main():
             vector = {"id": doc_uid, "values": embedding, "metadata": entry}
             vectors.append(vector)
 
-        if len(vectors) == 100:
-            try:
-                upsert_document_vectors(PINECONE_INDEX, vectors)
-            except Exception as e:
-                print(f"[ERROR] Failed to upsert batch: {e}")
-            vectors = []
-
-    if vectors:
         try:
-            upsert_document_vectors(PINECONE_INDEX, vectors)
+            upsert_document_vectors_by_batches(PINECONE_INDEX, vectors, 100)
         except Exception as e:
-            print(f"[ERROR] Failed to upsert batch: {e}")
+            print(f"[ERROR] Failed to upsert batch: {e} of length {len(vectors)}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
