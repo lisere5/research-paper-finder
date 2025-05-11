@@ -26,7 +26,8 @@ if paper_id:
 
     try:
         with st.spinner("🧠 Compiling information..."):
-            response = requests.get(f"http://127.0.0.1:8000/details", params={"paper_id": paper_id})
+            # response = requests.get(f"http://127.0.0.1:8000/details", params={"paper_id": paper_id})
+            response = requests.get(f"https://research-paper-finder-t1ey.onrender.com/details", params={"paper_id": paper_id})
             paper = response.json()
     except Exception as e:
         st.error(f"Could not load paper details: {e}")
@@ -245,8 +246,12 @@ if end_year:
 if search_clicked and query:
     with st.spinner("🔍 Searching..."):
         try:
+            # response = requests.get(
+            #     "http://127.0.0.1:8000/search",
+            #     params=params
+            # )
             response = requests.get(
-                "http://127.0.0.1:8000/search",
+                "https://research-paper-finder-t1ey.onrender.com/search",
                 params=params
             )
 
