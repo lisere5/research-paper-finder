@@ -58,7 +58,7 @@ def query_llm_in_chunks(text: str, model="gpt-3.5-turbo"):
     return summary
 
 
-def get_embedding(text: str, model="text-embedding-ada-002"):  # takes text, returns embedding
+def get_embedding(text: str, model="text-embedding-3-small"):  # takes text, returns embedding
     response = client.embeddings.create(input=[text], model=model)
     return response.data[0].embedding
 
