@@ -105,7 +105,7 @@ if paper_id:
 
 # Main page
 # st.set_page_config(page_title="Smart Research Paper Finder", layout="wide")
-st.title("📚 Smart Research Paper Finder")
+st.title("📚 ScholarFinder")
 
 st.markdown("""
 <style>
